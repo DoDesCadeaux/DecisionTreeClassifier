@@ -12,6 +12,9 @@ class MyDecisionTree:
             return LeafNode(self._get_leaf_value(y))
 
         feature_index, threshold = self._choose_feature(X, y)
+
+        if feature_index is None or threshold is None:
+            return LeafNode(self._get_leaf_value(y))
         min_value = np.min(X.iloc[:, feature_index])
         max_value = np.max(X.iloc[:, feature_index])
 
@@ -50,8 +53,8 @@ class MyDecisionTree:
         n_left = left_indices.sum()
         n_right = right_indices.sum()
 
-        if n_right == 0 or n_left == 0:
-            return float('inf')
+        if n_right == 0 or n_left == 0: # Cas ou division separe mal donc pas efficace
+            return float('inf') # On retourne inf pour definir que cette division est tres mauvaise
 
         left_gini = 1 - sum((np.sum(y[left_indices] == x) / n_left) ** 2 for x in np.unique(y))
         right_gini = 1 - sum((np.sum(y[right_indices] == x) / n_right) ** 2 for x in np.unique(y))
